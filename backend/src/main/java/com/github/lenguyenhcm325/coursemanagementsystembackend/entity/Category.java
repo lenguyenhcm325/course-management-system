@@ -1,6 +1,8 @@
 package com.github.lenguyenhcm325.coursemanagementsystembackend.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.List;
@@ -19,6 +21,8 @@ public class Category {
   @Column(name = "id")
   private int id;
 
+  @NotBlank
+  @Size(max = 255)
   @Column(name = "name")
   private String name;
 

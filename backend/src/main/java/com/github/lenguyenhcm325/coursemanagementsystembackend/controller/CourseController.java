@@ -2,13 +2,12 @@ package com.github.lenguyenhcm325.coursemanagementsystembackend.controller;
 
 import com.github.lenguyenhcm325.coursemanagementsystembackend.entity.Course;
 import com.github.lenguyenhcm325.coursemanagementsystembackend.service.CourseService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/courses")
@@ -22,7 +21,7 @@ public class CourseController {
   }
 
   @PostMapping
-  public ResponseEntity<Course> createCourse(@RequestBody Course course) {
+  public ResponseEntity<Course> createCourse(@Valid @RequestBody Course course) {
     Course createdCourse = courseService.saveCourse(course);
     return new ResponseEntity<>(createdCourse, HttpStatus.CREATED);
   }
@@ -45,7 +44,7 @@ public class CourseController {
 
   @PutMapping("/{id}")
   public ResponseEntity<Course> updateCourse(
-      @PathVariable int id, @RequestBody Course updatedCourse) {
+      @PathVariable int id, @Valid @RequestBody Course updatedCourse) {
     Course existingCourse = courseService.getCourseById(id);
     if (existingCourse != null) {
       Course updated = courseService.updateCourse(id, updatedCourse);

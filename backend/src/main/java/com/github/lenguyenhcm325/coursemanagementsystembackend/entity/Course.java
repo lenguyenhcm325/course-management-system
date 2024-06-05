@@ -1,6 +1,10 @@
 package com.github.lenguyenhcm325.coursemanagementsystembackend.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.sql.Timestamp;
@@ -21,18 +25,26 @@ public class Course {
   @Column(name = "id")
   private int id;
 
+  @NotBlank
+  @Size(max = 255)
   @Column(name = "title")
   private String title;
 
+  @NotBlank
+  @Size(max = 255)
   @Column(name = "author")
   private String author;
 
+  @Min(0)
+  @Max(100)
   @Column(name = "progress")
   private int progress;
 
+  @Size(max = 255)
   @Column(name = "course_profile_image_link")
   private String courseProfileImageLink;
 
+  @Size(max = 255)
   @Column(name = "notes")
   private String notes;
 
@@ -40,6 +52,7 @@ public class Course {
   @JoinColumn(name = "provider_id", nullable = false)
   private Provider provider;
 
+  @Size(max = 1023)
   @Column(name = "description")
   private String description;
 
