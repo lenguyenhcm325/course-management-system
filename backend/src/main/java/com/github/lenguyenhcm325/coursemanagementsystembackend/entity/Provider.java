@@ -1,5 +1,6 @@
 package com.github.lenguyenhcm325.coursemanagementsystembackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "Providers")
+@JsonIgnoreProperties("courses")
 public class Provider {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
