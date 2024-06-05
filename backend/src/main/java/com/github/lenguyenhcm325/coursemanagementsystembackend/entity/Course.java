@@ -49,10 +49,10 @@ public class Course {
   @Column(name = "end_date")
   private Date endDate;
 
-  @Column(name = "created_at")
+  @Column(name = "created_at", updatable = false, insertable = false)
   private Timestamp createdAt;
 
-  @Column(name = "updated_at")
+  @Column(name = "updated_at", updatable = false, insertable = false)
   private Timestamp updatedAt;
 
   @ManyToMany
