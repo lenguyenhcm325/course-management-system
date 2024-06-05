@@ -3,9 +3,12 @@ package com.github.lenguyenhcm325.coursemanagementsystembackend.controller;
 import com.github.lenguyenhcm325.coursemanagementsystembackend.entity.Course;
 import com.github.lenguyenhcm325.coursemanagementsystembackend.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/courses")
@@ -19,27 +22,47 @@ public class CourseController {
   }
 
   @PostMapping
-  public Course createCourse(@RequestBody Course course) {
-    return courseService.saveCourse(course);
+  public ResponseEntity<Course> createCourse(@RequestBody Course course) {
+    Course createdCourse = courseService.saveCourse(course);
+    return new ResponseEntity<>(createdCourse, HttpStatus.CREATED);
   }
 
   @GetMapping("/{id}")
-  public Course getCourseById(@PathVariable int id) {
-    return courseService.getCourseById(id);
+  public ResponseEntity<Course> getCourseById(@PathVariable int id) {
+    Course course = courseService.getCourseById(id);
+    if (course != null) {
+      return new ResponseEntity<>(course, HttpStatus.OK);
+    } else {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
   }
 
   @GetMapping
-  public List<Course> getAllCourses() {
-    return courseService.getAllCourses();
+  public ResponseEntity<List<Course>> getAllCourses() {
+    List<Course> courses = courseService.getAllCourses();
+    return new ResponseEntity<>(courses, HttpStatus.OK);
   }
 
   @PutMapping("/{id}")
-  public Course updateCourse(@PathVariable int id, @RequestBody Course updatedCourse) {
-    return courseService.updateCourse(id, updatedCourse);
+  public ResponseEntity<Course> updateCourse(
+      @PathVariable int id, @RequestBody Course updatedCourse) {
+    Course existingCourse = courseService.getCourseById(id);
+    if (existingCourse != null) {
+      Course updated = courseService.updateCourse(id, updatedCourse);
+      return new ResponseEntity<>(updated, HttpStatus.OK);
+    } else {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
   }
 
   @DeleteMapping("/{id}")
-  public void deleteCourse(@PathVariable int id) {
-    courseService.deleteCourseById(id);
+  public ResponseEntity<Void> deleteCourse(@PathVariable int id) {
+    Course existingCourse = courseService.getCourseById(id);
+    if (existingCourse != null) {
+      courseService.deleteCourseById(id);
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    } else {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
   }
 }
