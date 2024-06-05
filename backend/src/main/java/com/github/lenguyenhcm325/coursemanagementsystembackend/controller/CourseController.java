@@ -5,6 +5,8 @@ import com.github.lenguyenhcm325.coursemanagementsystembackend.service.CourseSer
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/courses")
 public class CourseController {
@@ -24,5 +26,20 @@ public class CourseController {
   @GetMapping("/{id}")
   public Course getCourseById(@PathVariable int id) {
     return courseService.getCourseById(id);
+  }
+
+  @GetMapping
+  public List<Course> getAllCourses() {
+    return courseService.getAllCourses();
+  }
+
+  @PutMapping("/{id}")
+  public Course updateCourse(@PathVariable int id, @RequestBody Course updatedCourse) {
+    return courseService.updateCourse(id, updatedCourse);
+  }
+
+  @DeleteMapping("/{id}")
+  public void deleteCourse(@PathVariable int id) {
+    courseService.deleteCourseById(id);
   }
 }
