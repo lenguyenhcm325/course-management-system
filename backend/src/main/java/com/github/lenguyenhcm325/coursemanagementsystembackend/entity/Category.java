@@ -26,7 +26,8 @@ public class Category {
   @Column(name = "name")
   private String name;
 
-  @ManyToMany
+  @ManyToMany(
+      cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
   @JoinTable(
       name = "Course_Categories",
       joinColumns = @JoinColumn(name = "category_id"),

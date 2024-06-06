@@ -48,7 +48,8 @@ public class Course {
   @Column(name = "notes")
   private String notes;
 
-  @ManyToOne
+  @ManyToOne(
+      cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
   @JoinColumn(name = "provider_id", nullable = false)
   private Provider provider;
 
@@ -68,7 +69,8 @@ public class Course {
   @Column(name = "updated_at", updatable = false, insertable = false)
   private Timestamp updatedAt;
 
-  @ManyToMany
+  @ManyToMany(
+      cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
   @JoinTable(
       name = "Course_Categories",
       joinColumns = @JoinColumn(name = "course_id"),

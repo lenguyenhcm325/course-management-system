@@ -27,7 +27,9 @@ public class Provider {
   @Column(name = "name")
   private String name;
 
-  @OneToMany(mappedBy = "provider")
+  @OneToMany(
+      mappedBy = "provider",
+      cascade = {CascadeType.ALL})
   private List<Course> courses;
 
   @Override
