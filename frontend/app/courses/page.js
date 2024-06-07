@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import CourseList from "./CourseList";
 import AddCourseForm from "./AddCourseForm";
 import AddCategoryForm from "./AddCategoryForm";
-import styles from "./Page.module.css";
+import styles from "./page.module.css";
 
 const backendUrl = process.env.BACKEND_URL;
 

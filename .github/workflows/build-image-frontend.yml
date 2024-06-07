@@ -8,11 +8,16 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  id-token: write
+  contents: read    
+
 env:
   FRONTEND_ECR_REPOSITORY: ${{ vars.FRONTEND_ECR_REPOSITORY }}      
 
 jobs:
   build-and-push:
+    environment: dev
     runs-on: ubuntu-latest
 
     steps:
@@ -23,6 +28,8 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: eu-central-1
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         
       - name: Login to Amazon ECR
         id: login-ecr
@@ -32,7 +39,7 @@ jobs:
         working-directory: ./frontend
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: $FRONTEND_ECR_REPOSITORY
+          REPOSITORY: ${{ env.FRONTEND_ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
