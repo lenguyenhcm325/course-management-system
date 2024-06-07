@@ -1,0 +1,110 @@
+.courseList {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.courseItem {
+  border: 1px solid #ddd;
+  margin: 10px 0;
+  padding: 15px;
+  border-radius: 8px;
+  background: #f0f0f0;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+.courseItem:hover {
+  background: #e0e0e0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.courseItem h2 {
+  margin: 0 0 10px;
+  color: #333333;
+  font-size: 1.5em;
+}
+
+.courseItem p {
+  margin: 5px 0;
+  color: #555555;
+}
+
+.courseItem p span {
+  font-weight: bold;
+  color: #333333;
+}
+
+.courseItem button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  background-color: #333333;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin: 4px 0px;
+}
+
+.courseItem button:hover {
+  background-color: #555555;
+}
+
+.courseItem .deleteButton {
+  background-color: #d9534f;
+  margin-left: 10px;
+}
+
+.courseItem .deleteButton:hover {
+  background-color: #c9302c;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pageItem {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  background-color: #666666;
+  color: white;
+  cursor: pointer;
+  margin: 0 5px;
+  transition: background 0.3s;
+}
+
+.pageItem:hover {
+  background-color: #555555;
+}
+
+.pageItem.active {
+  background-color: #0070f3;
+}
+
+.notesLink {
+  color: #0070f3;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.notesLink:hover {
+  color: #005bb5;
+}
+
+.noCoursesMessage {
+  text-align: center;
+  font-size: 1.2em;
+  margin: 20px 0;
+}
+
+.addCourseLink {
+  color: #0070f3;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.addCourseLink:hover {
+  color: #005bb5;
+}

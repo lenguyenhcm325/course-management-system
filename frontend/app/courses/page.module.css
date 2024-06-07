@@ -1,0 +1,27 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.toggleButton {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  background-color: #666666;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin: 5px 10px 0px 0;
+}
+
+.toggleButton:hover {
+  background-color: #555555;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 20px;
+}
