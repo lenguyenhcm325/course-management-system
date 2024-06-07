@@ -1,5 +1,6 @@
 package com.github.lenguyenhcm325.coursemanagementsystembackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -14,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "Categories")
+@JsonIgnoreProperties("courses")
 public class Category {
 
   @Id
