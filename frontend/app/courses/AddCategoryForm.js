@@ -4,6 +4,8 @@ import axios from "axios";
 import { useState } from "react";
 import styles from "./FormStyles.module.css";
 
+const backendUrl = process.env.BACKEND_URL;
+
 const AddCategoryForm = ({ onCategoryAdded, onCancel }) => {
   const [categoryName, setCategoryName] = useState("");
 
@@ -14,7 +16,7 @@ const AddCategoryForm = ({ onCategoryAdded, onCancel }) => {
   const handleAddCategory = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8080/categories", {
+      const response = await axios.post(`${backendUrl}/categories`, {
         name: categoryName,
       });
       onCategoryAdded(response.data);

@@ -4,6 +4,8 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import styles from "./FormStyles.module.css";
 
+const backendUrl = process.env.BACKEND_URL;
+
 const EditCourseForm = ({ course, onSave, onCancel }) => {
   const [providers, setProviders] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -11,12 +13,12 @@ const EditCourseForm = ({ course, onSave, onCancel }) => {
 
   useEffect(() => {
     const fetchProviders = async () => {
-      const result = await axios.get("http://localhost:8080/providers");
+      const result = await axios.get(`${backendUrl}/providers`);
       setProviders(result.data);
     };
 
     const fetchCategories = async () => {
-      const result = await axios.get("http://localhost:8080/categories");
+      const result = await axios.get(`${backendUrl}/categories`);
       setCategories(result.data);
     };
 
@@ -66,10 +68,7 @@ const EditCourseForm = ({ course, onSave, onCancel }) => {
   const handleSave = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(
-        `http://localhost:8080/courses/${course.id}`,
-        updatedCourse
-      );
+      await axios.put(`${backendUrl}/courses/${course.id}`, updatedCourse);
       onSave(updatedCourse);
     } catch (error) {
       console.error("There was an error updating the course!", error);

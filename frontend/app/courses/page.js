@@ -7,6 +7,8 @@ import AddCourseForm from "./AddCourseForm";
 import AddCategoryForm from "./AddCategoryForm";
 import styles from "./Page.module.css";
 
+const backendUrl = process.env.BACKEND_URL;
+
 const CoursesPage = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,7 +18,7 @@ const CoursesPage = () => {
 
   const fetchCourses = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/courses");
+      const response = await axios.get(`${backendUrl}/courses`);
       setCourses(response.data);
     } catch (error) {
       setError(error.message);
@@ -35,10 +37,7 @@ const CoursesPage = () => {
   };
 
   const handleCourseUpdated = async (updatedCourse) => {
-    await axios.put(
-      `http://localhost:8080/courses/${updatedCourse.id}`,
-      updatedCourse
-    );
+    await axios.put(`${backendUrl}/courses/${updatedCourse.id}`, updatedCourse);
     fetchCourses();
   };
 

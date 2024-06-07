@@ -4,6 +4,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import styles from "./FormStyles.module.css";
 
+const backendUrl = process.env.BACKEND_URL;
+
 const AddCourseForm = ({ onCourseAdded, onCancel }) => {
   const [providers, setProviders] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -23,12 +25,12 @@ const AddCourseForm = ({ onCourseAdded, onCancel }) => {
 
   useEffect(() => {
     const fetchProviders = async () => {
-      const result = await axios.get("http://localhost:8080/providers");
+      const result = await axios.get(`${backendUrl}/providers`);
       setProviders(result.data);
     };
 
     const fetchCategories = async () => {
-      const result = await axios.get("http://localhost:8080/categories");
+      const result = await axios.get(`${backendUrl}/categories`);
       setCategories(result.data);
     };
 
@@ -62,10 +64,7 @@ const AddCourseForm = ({ onCourseAdded, onCancel }) => {
   const handleAddCourse = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:8080/courses",
-        newCourse
-      );
+      const response = await axios.post(`${backendUrl}/courses`, newCourse);
       onCourseAdded(response.data);
       setNewCourse({
         title: "",

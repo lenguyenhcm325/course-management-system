@@ -5,6 +5,8 @@ import axios from "axios";
 import styles from "./CourseList.module.css";
 import EditCourseForm from "./EditCourseForm";
 
+const backendUrl = process.env.BACKEND_URL;
+
 const CourseList = ({ courses, onCourseUpdated, refreshCourses }) => {
   const [editingCourse, setEditingCourse] = useState(null);
   const [sortedCourses, setSortedCourses] = useState([]);
@@ -25,7 +27,7 @@ const CourseList = ({ courses, onCourseUpdated, refreshCourses }) => {
   const handleDeleteClick = async (courseId) => {
     if (window.confirm("Are you sure you want to delete this course?")) {
       try {
-        await axios.delete(`http://localhost:8080/courses/${courseId}`);
+        await axios.delete(`${backendUrl}/courses/${courseId}`);
         refreshCourses();
       } catch (error) {
         console.error("There was an error deleting the course!", error);
