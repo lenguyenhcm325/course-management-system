@@ -47,7 +47,7 @@ public class CourseController {
       @PathVariable int id, @Valid @RequestBody Course updatedCourse) {
     Course existingCourse = courseService.getCourseById(id);
     if (existingCourse != null) {
-      Course updated = courseService.updateCourse(id, updatedCourse);
+      Course updated = courseService.updateCourseById(id, updatedCourse);
       return new ResponseEntity<>(updated, HttpStatus.OK);
     } else {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
