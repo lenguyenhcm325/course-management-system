@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      imagePullSecrets:
+        - name: ecr-registry-secret
+      containers:
+        - name: backend
+          image: "{{ .Values.backend.image.registry }}/{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
+          imagePullPolicy : {{ .Values.backend.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.backend.deployment.containerPort }}
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: {{ .Values.backend.database.url }}
+            - name: SPRING_DATASOURCE_USERNAME
+              value: {{ .Values.backend.database.username }}
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: {{ .Values.backend.database.password }}

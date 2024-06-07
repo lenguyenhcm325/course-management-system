@@ -91,3 +91,9 @@ FROM
     @sql;
 
 EXECUTE stmt;
+
+CREATE USER 'lenguyen' @'localhost' IDENTIFIED BY 'lenguyen';
+
+GRANT ALL PRIVILEGES ON CMS.* TO 'lenguyen' @'localhost';
+
+FLUSH PRIVILEGES;

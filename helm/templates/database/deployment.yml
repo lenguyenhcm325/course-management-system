@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+  labels:
+    app: mysql
+spec:
+  serviceName: mysql
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      initContainers:
+            - name: mysql-create-directory-structure
+              image: busybox
+              command:
+                [
+                  "sh",
+                  "-c",
+                  "mkdir -p /bitnami/mysql/data && chown -R 1001:1001 /bitnami",
+                ]
+              volumeMounts:
+              - name: mysql-data
+                mountPath: /bitnami
+      containers:
+        - name: mysql
+          image: bitnami/mysql:latest
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: {{ .Values.database.auth.rootPassword }}
+            - name: MYSQL_DATABASE
+              value: {{ .Values.database.auth.database }}
+            - name: MYSQL_USER
+              value: {{ .Values.database.auth.username }}
+            - name: MYSQL_PASSWORD
+              value: {{ .Values.database.auth.password }}
+          ports:
+            - containerPort: {{ .Values.database.statefulSet.containerPort }}
+          volumeMounts:
+            - name: mysql-initdb
+              mountPath: /docker-entrypoint-initdb.d
+            - name: mysql-data
+              mountPath: /bitnami/mysql
+      volumes:
+        - name: mysql-initdb
+          configMap:
+            name: mysql-initdb-config
+  volumeClaimTemplates:
+    - metadata:
+        name: mysql-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: {{ .Values.database.primary.persistence.size }}

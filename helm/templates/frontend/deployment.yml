@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      imagePullSecrets:
+        - name: ecr-registry-secret
+      containers:
+        - name: frontend
+          image: "{{ .Values.frontend.image.registry }}/{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
+          imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.frontend.deployment.containerPort }}
+          env:
+            - name: NEXT_PUBLIC_BACKEND_URL
+              value: {{ .Values.frontend.backend.backendUrl }}

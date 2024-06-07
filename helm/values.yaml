@@ -1,0 +1,53 @@
+replicaCount: 1
+
+frontend:
+  image:
+  # This is just a placeholder value, must be overriden with the --set flag
+    registry: "default-registry"
+    repository: cms-frontend
+    tag: latest
+    pullPolicy: Always
+  deployment:
+    containerPort: 3000
+  service:
+    type: NodePort
+    port: 80
+    targetPort: 3000
+  backend:
+    databaseUrl: http://backend:8080
+
+backend:
+  image:
+  # This is just a placeholder value, must be overriden with the --set flag
+    registry: "default-registry"
+    repository: cms-backend
+    tag: latest
+    pullPolicy: Always
+  deployment:
+    containerPort: 8080
+  service:
+    type: ClusterIP
+    port: 8080
+    targetPort: 8080
+  database:
+    url: jdbc:mysql://mysql:3306/CMS
+    username: lenguyen
+    password: lenguyen
+
+database:
+  statefulSet:
+    containerPort: 3306
+  service:
+    type: ClusterIP
+    port: 3306
+    targetPort: 3306
+  auth:
+  # This is just a placeholder value, must be overriden with the --set flag
+    rootPassword: "default-root-password"
+    database: CMS
+    username: lenguyen
+    password: lenguyen
+  primary:
+    persistence:
+      enabled: true
+      size: 250Mi
