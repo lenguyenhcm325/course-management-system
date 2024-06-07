@@ -38,7 +38,7 @@ public class CourseService {
   }
 
   @Transactional
-  public Course updateCourse(int id, Course updatedCourse) {
+  public Course updateCourseById(int id, Course updatedCourse) {
     return courseRepository
         .findById(id)
         .map(
