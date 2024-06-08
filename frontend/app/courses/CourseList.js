@@ -5,7 +5,7 @@ import axios from "axios";
 import styles from "./CourseList.module.css";
 import EditCourseForm from "./EditCourseForm";
 
-const backendUrl = process.env.BACKEND_URL;
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 const CourseList = ({ courses, onCourseUpdated, refreshCourses }) => {
   const [editingCourse, setEditingCourse] = useState(null);

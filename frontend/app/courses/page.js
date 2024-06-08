@@ -7,7 +7,7 @@ import AddCourseForm from "./AddCourseForm";
 import AddCategoryForm from "./AddCategoryForm";
 import styles from "./page.module.css";
 
-const backendUrl = process.env.BACKEND_URL;
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 const CoursesPage = () => {
   const [courses, setCourses] = useState([]);
