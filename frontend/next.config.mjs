@@ -4,5 +4,6 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   output: "standalone",
+  basePath: "/frontend",
 };
 export default nextConfig;

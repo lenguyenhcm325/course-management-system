@@ -5,7 +5,7 @@ metadata:
   name: alb-ingress
   annotations:
     {{- range $key, $value := .Values.ingress.annotations }}
-    {{ $key }}: {{ $value }}
+    {{ $key }}: {{ $value | quote }}
     {{- end }}
 spec:
   rules:
