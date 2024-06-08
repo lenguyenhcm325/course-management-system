@@ -21,7 +21,8 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-ENV NEXT_PUBLIC_BACKEND_URL http://hk8s-default-albingre-e4d4d6489a-297347672.eu-central-1.elb.amazonaws.com/backend
+ENV NEXT_PUBLIC_BACKEND_URL http://k8s-default-albingre-e4d4d6489a-1138352386.eu-central-1.elb.amazonaws.com/backend
+ENV NEXT_PUBLIC_FRONTEND_URL http://k8s-default-albingre-e4d4d6489a-1138352386.eu-central-1.elb.amazonaws.com/frontend
 
 RUN \
   if [ -f yarn.lock ]; then yarn run build; \

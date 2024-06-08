@@ -16,21 +16,23 @@ spec:
         app: mysql
     spec:
       initContainers:
-            - name: mysql-create-directory-structure
-              image: busybox
-              command:
-                [
-                  "sh",
-                  "-c",
-                  "mkdir -p /bitnami/mysql/data && chown -R 1001:1001 /bitnami",
-                ]
-              volumeMounts:
-              - name: mysql-data
-                mountPath: /bitnami
+        - name: mysql-create-directory-structure
+          image: busybox
+          command:
+            [
+              "sh",
+              "-c",
+              "mkdir -p /bitnami/mysql/data && chown -R 1001:1001 /bitnami",
+            ]
+          volumeMounts:
+          - name: mysql-data
+            mountPath: /bitnami
       containers:
         - name: mysql
           image: bitnami/mysql:latest
           env:
+            - name: MYSQL_EXTRA_FLAGS
+              value: '--lower-case-table-names=1'
             - name: MYSQL_ROOT_PASSWORD
               value: {{ .Values.database.auth.rootPassword }}
             - name: MYSQL_DATABASE

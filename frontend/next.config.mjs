@@ -5,5 +5,6 @@ const nextConfig = {
   },
   output: "standalone",
   basePath: "/frontend",
+  assetPrefix: process.env.NEXT_PUBLIC_FRONTEND_URL,
 };
 export default nextConfig;
