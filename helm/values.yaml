@@ -51,3 +51,17 @@ database:
     persistence:
       enabled: true
       size: 250Mi
+
+ingress:
+  enabled: true
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+  paths:
+    - path: /frontend/*
+      serviceName: frontend
+      servicePort: 80
+    - path: /backend/*
+      serviceName: backend
+      servicePort: 8080
