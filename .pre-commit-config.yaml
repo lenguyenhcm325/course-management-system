@@ -1,0 +1,43 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+        args: ['--fix=lf']
+        description: Forces to replace line ending by the UNIX 'lf' character.
+  - repo: https://github.com/antonbabenko/pre-commit-terraform.git
+    rev: v1.92.0
+    hooks:
+      - id: terraform_fmt
+      - id: terraform_docs
+        args:
+          - '--hook-config=--create-file-if-not-exist=true'
+      - id: terraform_tflint
+        args:
+          - '--args=--only=terraform_deprecated_interpolation'
+          - '--args=--only=terraform_deprecated_index'
+          - '--args=--only=terraform_unused_declarations'
+          - '--args=--only=terraform_comment_syntax'
+          - '--args=--only=terraform_documented_outputs'
+          - '--args=--only=terraform_documented_variables'
+          - '--args=--only=terraform_typed_variables'
+          - '--args=--only=terraform_module_pinned_source'
+          - '--args=--only=terraform_naming_convention'
+          - '--args=--only=terraform_unused_required_providers'
+          - '--args=--only=terraform_standard_module_structure'
+          - '--args=--only=terraform_workspace_remote'
+  - repo: https://github.com/bridgecrewio/checkov.git
+    rev: '3.2.144'
+    hooks:
+      - id: checkov_secrets
+        name: checkov-secret-scan
+        description: Runs the Checkov secret scan on all files in this repository.
+      - id: checkov
+        name: checkov-iac-scan
+        description: Runs the Checkov IaC security scan on all terraform files in this repository.
+        args: [ --quiet,
+                --framework, terraform,
+                --skip-check, "CKV_TF_1,CKV_AWS_117,CKV_AWS_272,CKV_AWS_144",
+                --download-external-modules, "false" ]
