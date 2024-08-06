@@ -17,7 +17,7 @@ spec:
     spec:
       initContainers:
         - name: mysql-create-directory-structure
-          image: busybox
+          image: busybox:1.36
           command:
             [
               "sh",
@@ -29,7 +29,7 @@ spec:
             mountPath: /bitnami
       containers:
         - name: mysql
-          image: bitnami/mysql:latest
+          image: bitnami/mysql:8.0
           env:
             - name: MYSQL_EXTRA_FLAGS
               value: '--lower-case-table-names=1'
