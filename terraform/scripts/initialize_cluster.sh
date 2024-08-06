@@ -1,18 +1,14 @@
 #!/bin/bash
 # TODO: considering use chart dependencies instead of helm install each one (if possible)
-# TODO: explain the bug with cloudformation
 
 set -e
 
-# update kubeconfig to be able to manage the cluster locally
+# update kubeconfig to be able to manage the cluster remotely
 aws eks update-kubeconfig --region ${REGION} --name ${CLUSTER_NAME}
-
-# There is some problem with the healthcheck of the pods!!
-# https://artifacthub.io/packages/helm/aws/aws-load-balancer-controller
-# https://skryvets.com/blog/2021/03/15/kubernetes-pull-image-from-private-ecr-registry/
 
 # install ebs csi driver
 helm repo add aws-ebs-csi-driver https://kubernetes-sigs.github.io/aws-ebs-csi-driver
+helm repo update
 helm upgrade --install aws-ebs-csi-driver \
 	--namespace kube-system \
 	aws-ebs-csi-driver/aws-ebs-csi-driver
@@ -27,15 +23,17 @@ eksctl utils associate-iam-oidc-provider \
 	--approve
 
 # fetch the iam policy json with the required permission for the load balancer controller to work correctly
-curl -o iam-policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/main/docs/install/iam_policy.json
+curl -o iam-policy.json \
+  https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/main/docs/install/iam_policy.json
 
-# TODO: this create-policy might fail if the policy already exists
 # create iam policy with the mentioned json policy
+# to avoid name clash, a random suffix is added at the end
 aws iam create-policy \
     --policy-name AWSLoadBalancerControllerIAMPolicy${RANDOM_NUMBER} \
     --policy-document file://iam-policy.json
 
 # create serviceaccount with the iam policy
+# there is a bug with cloudformation, so the service account's name has a random suffix
 eksctl create iamserviceaccount \
 	--cluster=${CLUSTER_NAME} \
 	--namespace=kube-system \
@@ -43,6 +41,7 @@ eksctl create iamserviceaccount \
 	--attach-policy-arn=arn:aws:iam::${ACCOUNT_ID}:policy/AWSLoadBalancerControllerIAMPolicy${RANDOM_NUMBER} \
 	--approve
 
+# add and update the repository containing the load balancer controller
 helm repo add eks https://aws.github.io/eks-charts
 helm repo update
 
@@ -70,4 +69,9 @@ sleep 30
 cd ../helm/
 
 # deploy the project via helm chart
-helm upgrade --install my-cms . --set frontend.image.registry=${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com,backend.image.registry=${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com,database.auth.rootPassword=nguyen
+helm upgrade --install my-cms . \
+  --set frontend.image.registry=${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com \
+  --set backend.image.registry=${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com \
+  --set database.auth.rootPassword=nguyen
+
+# TODO: create a CNAME record that points the personal domain to the load balancer endpoint
