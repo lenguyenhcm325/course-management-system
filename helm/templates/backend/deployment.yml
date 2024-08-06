@@ -18,6 +18,10 @@ spec:
         - name: backend
           image: "{{ .Values.backend.image.registry }}/{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
           imagePullPolicy : {{ .Values.backend.image.pullPolicy }}
+          livenessProbe:
+            {{- toYaml .Values.backend.deployment.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.backend.deployment.readinessProbe | nindent 12 }}
           ports:
             - containerPort: {{ .Values.backend.deployment.containerPort }}
           env:

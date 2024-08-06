@@ -37,6 +37,18 @@ backend:
     pullPolicy: Always
   deployment:
     containerPort: 8080
+    livenessProbe:
+      httpGet:
+        path: /backend/actuator/health/liveness
+        port: 8080
+      initialDelaySeconds: 30
+      periodSeconds: 10
+    readinessProbe:
+      httpGet:
+        path: /backend/actuator/health/readiness
+        port: 8080
+      initialDelaySeconds: 30
+      periodSeconds: 10
   service:
     type: ClusterIP
     port: 8080
