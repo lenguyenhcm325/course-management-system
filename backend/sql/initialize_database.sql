@@ -42,6 +42,13 @@ CREATE TABLE IF NOT EXISTS Course_Categories (
     FOREIGN KEY (category_id) REFERENCES Categories(id) ON DELETE CASCADE
 );
 
+INSERT INTO
+    Providers (name)
+VALUES
+    ('Udemy'),
+    ('ACloudGuru'),
+    ('Coursera');
+
 SET
     @x := (
         select
