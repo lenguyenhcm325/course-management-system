@@ -18,5 +18,9 @@ spec:
         - name: frontend
           image: "{{ .Values.frontend.image.registry }}/{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
           imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+          livenessProbe:
+            {{- toYaml .Values.frontend.deployment.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.frontend.deployment.readinessProbe | nindent 12 }}
           ports:
             - containerPort: {{ .Values.frontend.deployment.containerPort }}
