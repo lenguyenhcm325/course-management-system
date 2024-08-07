@@ -95,11 +95,17 @@ module "eks" {
 }
 
 /*
-This script does the following thing:
-- Create an IAM service account so that the load balancer controller could deploy an elb
-- Download and install aws load balancer controller helm chart
-- Download and install aws ebs csi driver helm chart
-- Install the frontend, backend and database of the project with correct configuration
+This script performs the following tasks:
+- Updates the kubeconfig to manage the cluster remotely
+- Installs the AWS EBS CSI Driver using Helm
+- Associates an IAM OIDC provider with the cluster
+- Creates an IAM policy for the AWS Load Balancer Controller
+- Creates an IAM service account for the AWS Load Balancer Controller
+- Installs the AWS Load Balancer Controller using Helm
+- Creates imagePullSecrets for ECR authentication
+- Deploys the project (frontend, backend, and database) using Helm
+- Waits for the Application Load Balancer to be created
+- Updates Route 53 with a CNAME record pointing to the Load Balancer
 */
 resource "null_resource" "initialize_cluster" {
   depends_on = [module.eks]
