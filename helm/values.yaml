@@ -82,7 +82,9 @@ ingress:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-central-1:312290079196:certificate/e4f75d6f-c39b-421a-88fd-3765a434b641
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
   paths:
     - path: /frontend/*
       serviceName: frontend
