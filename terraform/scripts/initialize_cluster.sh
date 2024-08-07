@@ -1,5 +1,6 @@
 #!/bin/bash
-# TODO: considering use chart dependencies instead of helm install each one (if possible)
+# TODO: considering use chart dependencies instead of helm install each one (if reasonable)
+# TODO: add more echo statements for logging purpose
 
 set -e
 
@@ -66,12 +67,54 @@ kubectl create secret docker-registry ecr-registry-secret \
 # wait some time for the aws-load-balancer-controller to start and work properly
 sleep 30
 
-cd ../helm/
-
 # deploy the project via helm chart
+cd ../helm/
 helm upgrade --install my-cms . \
   --set frontend.image.registry=${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com \
   --set backend.image.registry=${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com \
   --set database.auth.rootPassword=nguyen
 
-# TODO: create a CNAME record that points the personal domain to the load balancer endpoint
+# wait for the application load balancer to be created
+echo "Waiting for Load Balancer to be created..."
+while true; do
+    LB_HOSTNAME=$(kubectl get ingress alb-ingress -n $NAMESPACE_NAME -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+    if [ ! -z "$LB_HOSTNAME" ]; then
+        echo "Load Balancer created: $LB_HOSTNAME"
+        break
+    fi
+    sleep 10
+done
+
+DOMAIN="le-nguyen.com"
+SUBDOMAIN="cms"
+HOSTED_ZONE_ID=$(aws route53 list-hosted-zones-by-name --dns-name $DOMAIN --query "HostedZones[0].Id" --output text)
+
+# prepare the Route 53 change batch
+CHANGE_BATCH=$(cat <<EOF
+{
+  "Changes": [
+    {
+      "Action": "UPSERT",
+      "ResourceRecordSet": {
+        "Name": "${SUBDOMAIN}.${DOMAIN}",
+        "Type": "CNAME",
+        "TTL": 60,
+        "ResourceRecords": [
+          {
+            "Value": "${LB_HOSTNAME}"
+          }
+        ]
+      }
+    }
+  ]
+}
+EOF
+)
+
+# update the Route 53 record
+echo "Updating Route 53 record..."
+aws route53 change-resource-record-sets \
+    --hosted-zone-id $HOSTED_ZONE_ID \
+    --change-batch "$CHANGE_BATCH"
+
+echo "CNAME record updated successfully!"
