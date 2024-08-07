@@ -95,7 +95,7 @@ module "eks" {
 }
 
 /*
-This script performs the following tasks:
+The script initialize_cluster.sh performs the following tasks:
 - Updates the kubeconfig to manage the cluster remotely
 - Installs the AWS EBS CSI Driver using Helm
 - Associates an IAM OIDC provider with the cluster
@@ -106,9 +106,24 @@ This script performs the following tasks:
 - Deploys the project (frontend, backend, and database) using Helm
 - Waits for the Application Load Balancer to be created
 - Updates Route 53 with a CNAME record pointing to the Load Balancer
+
+The script cleanup_cluster.sh performs the following tasks:
+- Updates the kubeconfig to manage the cluster remotely
+- Deletes the Route 53 CNAME record pointing to the Load Balancer
+- Removes the IAM policy for the AWS Load Balancer Controller
+- Removes the IAM OIDC provider associated with the cluster
+- Deletes the Application Load Balancer
+- Removes the IAM service account for the AWS Load Balancer Controller
 */
 resource "null_resource" "initialize_cluster" {
   depends_on = [module.eks]
+  triggers = {
+    account_id    = var.account_id
+    cluster_name  = module.eks.cluster_name
+    region        = var.region
+    vpc_id        = module.vpc.vpc_id
+    random_number = random_integer.six_digit.id
+  }
   provisioner "local-exec" {
     command = <<-EOT
     cd ${path.cwd} && \
@@ -122,6 +137,18 @@ resource "null_resource" "initialize_cluster" {
       RANDOM_NUMBER = random_integer.six_digit.id
     }
   }
+  provisioner "local-exec" {
+    when    = destroy
+    command = <<-EOT
+    cd ${path.cwd} && \
+    bash ./scripts/cleanup_cluster.sh
+  EOT
+    environment = {
+      ACCOUNT_ID    = self.triggers.account_id
+      CLUSTER_NAME  = self.triggers.cluster_name
+      REGION        = self.triggers.region
+      VPC_ID        = self.triggers.vpc_id
+      RANDOM_NUMBER = self.triggers.random_number
+    }
+  }
 }
-
-# TODO: delete_cluster.sh when destroying the cluster
