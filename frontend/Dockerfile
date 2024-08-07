@@ -21,8 +21,8 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-ENV NEXT_PUBLIC_BACKEND_URL http://cms.le-nguyen.com/backend
-ENV NEXT_PUBLIC_FRONTEND_URL http://cms.le-nguyen.com/frontend
+ENV NEXT_PUBLIC_BACKEND_URL https://cms.le-nguyen.com/backend
+ENV NEXT_PUBLIC_FRONTEND_URL https://cms.le-nguyen.com/frontend
 
 RUN \
   if [ -f yarn.lock ]; then yarn run build; \
